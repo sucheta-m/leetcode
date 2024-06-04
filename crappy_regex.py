@@ -1,49 +1,27 @@
 class Solution:
-    def processStar(self, prevp, prevs, currs: str):
-        if prevp == ".":
-            return True
-        elif prevs == currs:
-            pass
+    def findPattern(self, p):
+        pattern = []
+        for i in range(len(p)):
+            if p[i] == "*":
+                continue
+            elif i+1 < len(p) and p[i+1] == "*":
+                pattern.append(p[i:i+2])
+            else:
+                pattern.append(p[i])
+        return pattern
+
+    def checkMatch(self, currs, nexts, p):
+        truth_table = ([False]*len(s))*len(p)
+        
+        for match in pattern:
+            if "*" in match:
+                currp = match.split(*)
+            
 
     def isMatch(self, s: str, p: str) -> bool:
-        prevs = s[0]
-        prevp = p[0]
-        if len(p)>len(s):
-            loop = len(p)
-        else:
-            loop = len(s)
-        for i in range(loop):
-            try:
-                p[i]
-            except IndexError:
-                return False
-            if p[i] == ".":
-                prevs = s[i]
-                prevp = p[i]
-                continue
-            elif p[i] == "*":
-                resStar = self.processStar(prevp, prevs, s[i])
-                prevs = s[i]
-                prevp = p[i]
-                if resStar == True:
-                    return True
+        pattern = self.findPattern(p)
 
-            else:
-                if p[i] == s[i]:
-                    prevs = s[i]
-                    prevp = p[i]
-                elif p[i] != s[i]:
-                    return False
-        return True
-                
+        for i in range(len(s)):
+            checkMatch(self, s[i], s[i+1], p)
             
-def main():
-    sol = Solution()
-    val = sol.isMatch("aa","a")
-    print(val)
-
-if __name__ == "__main__":
-    main()  
-                
-
-        
+        return True
