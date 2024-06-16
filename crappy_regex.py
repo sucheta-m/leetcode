@@ -1,46 +1,83 @@
 import numpy as np
 
 class Solution:
-    def findPattern(self, p):
-        pattern = []
-        for i in range(len(p)):
-            if p[i] == "*":
+    def __init__(self, string, pattern):
+        self.s = string
+        self.p = pattern
+        self.pattern = []
+
+    def findPattern(self):
+        for i in range(len(self.p)):
+            if self.p[i] == "*":
                 continue
-            elif i+1 < len(p) and p[i+1] == "*":
-                pattern.append(p[i:i+2])
+            elif i+1 < len(self.p) and self.p[i+1] == "*":
+                self.pattern.append(self.p[i:i+2])
             else:
-                pattern.append(p[i])
-        return pattern
+                self.pattern.append(self.p[i])
+        return self.pattern
 
-    def make_tt(self, s, pattern):
-        tt = np.full((len(pattern), len(s)), False)
-        for match in range(len(pattern)):
-            for char in range(len(s)):
-                print(char, match)
-                print(pattern[match])
-                print(s[char])
-                if s[char] == pattern[match].replace("*",""):
-                    tt[match][char] = True
-                print(tt[match][char])
-        return tt
+    def make_tt(self):
+        self.tt = np.full((len(self.pattern), len(self.s)), False)
+        for match in range(len(self.pattern)):
+            for char in range(len(self.s)):
+                if self.s[char] == self.pattern[match].replace("*",""):
+                    self.tt[match][char] = True
+
     
-    def traverse_tt(self, tt, pattern):
-        num_row, num_col = np.shape(tt)
-        for row in range(num_row):
-            for col in range(num_col):
-                if tt[row][col] == True:
-                    
+    def traverse_star(self, row, col):
+        if self.tt[row][col+1] == True:
+            print(row, col+1)
+            self.traverse_tt(row, col+1)
+        elif self.tt[row+1][col] == True:
+            print(row+1, col)
+            self.traverse_tt(row+1, col)
+        else:
+            print("False")
+            return False
+    
+    def max_both(self, row, col):
+        if self.tt[row][col] == True:
+            return True
 
-            
-    def isMatch(self, s: str, p: str) -> bool:
-        pattern = self.findPattern(p)
-        tt = self.make_tt(s, pattern)
-        print(tt)
-        return True
+    def max_pattern(self, row, col):
+        if self.tt[row][col] == True:
+            return True
+     
+    def max_string(self, row, col):
+        if self.tt[row][col] == True:
+            return True
+
+    def traverse_tt(self, row, col):
+        print(self.pattern[row])
+        if row > len(self.pattern) and col > len(self.s):
+            self.max_both(row, col)
+        if row > len(self.pattern):
+            self.max_pattern(row, col)
+        if col > len(self.s):
+            self.max_string(row, col)
+        row += 1
+        col += 1
+        if self.tt[row][col] == True:
+            if "*" in self.pattern[row]:
+                self.traverse_star(row, col)
+            elif self.tt[row+1][col] == True:
+                print(row+1, col)
+                self.traverse_star(row+1, col)
+        
+        self.traverse_tt(row, col)
+        
+
+    def isMatch(self) -> bool:
+        self.pattern = self.findPattern()
+        self.make_tt()
+        print(self.tt)
     
 def main():
-    sol = Solution()
-    sol.isMatch("aabba", "a*ab*a")
+    sol = Solution("aabba", "a*ab*a")
+    sol.isMatch()
+    sol.traverse_tt(0,0)
 
 if __name__ == "__main__":
         main()
+    
+
